@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "GPAofDLPU.js",
+  "sourceRoot": "",
+  "sources": [
+    "GPAofDLPU.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA;;GAAA;;AAIA;AAAA;;;;;;;;;;GAJA;AAAA;AAAA;AAAA,MAAA,SAAA;;AAAA,EAiBA,SAAA,GAAY,SAAA,GAAA;WACV,MAAM,CAAC,KAAP,CAAa,yCAAb,EADU;EAAA,CAjBZ,CAAA;AAAA"
+}
