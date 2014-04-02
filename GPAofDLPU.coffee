@@ -14,6 +14,42 @@
   })();
 ###
 
+class Course
+
 
 runOnLoad = ->
   window.alert 'GPAofDLPU is loaded and installed well.'
+
+
+getReportTable = ->
+  return document.getElementsByClassName('tableborder')
+
+
+tableToCourses = (table) ->
+  rowToCourse(row) for row in table when isRowACourse(row)
+
+
+isRowACourse = (row) ->
+  true
+
+
+rowToCourse = (row) ->
+
+  course = new Course
+
+  for index in [0...row.length]
+
+    cell = row[index]
+
+    switch index
+      when 0 then course.semester = cell.text
+      when 1 then course.id = cell.text
+      when 2 then course.name = cell.text
+      when 3 then course.type = cell.text
+      when 4 then course.period = cell.text
+      when 5 then course.credit = cell.text
+      when 6 then course.category = cell.text
+      when 7 then course.grade = cell.text
+      when 8 then course.isDegree = cell.text
+
+  course

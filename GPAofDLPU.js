@@ -18,10 +18,74 @@
  */
 
 (function() {
-  var runOnLoad;
+  var Course, getReportTable, isRowACourse, rowToCourse, runOnLoad, tableToCourses;
+
+  Course = (function() {
+    function Course() {}
+
+    return Course;
+
+  })();
 
   runOnLoad = function() {
     return window.alert('GPAofDLPU is loaded and installed well.');
+  };
+
+  getReportTable = function() {
+    return document.getElementsByClassName('tableborder');
+  };
+
+  tableToCourses = function(table) {
+    var row, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = table.length; _i < _len; _i++) {
+      row = table[_i];
+      if (isRowACourse(row)) {
+        _results.push(rowToCourse(row));
+      }
+    }
+    return _results;
+  };
+
+  isRowACourse = function(row) {
+    return true;
+  };
+
+  rowToCourse = function(row) {
+    var cell, course, index, _i, _ref;
+    course = new Course;
+    for (index = _i = 0, _ref = row.length; 0 <= _ref ? _i < _ref : _i > _ref; index = 0 <= _ref ? ++_i : --_i) {
+      cell = row[index];
+      switch (index) {
+        case 0:
+          course.semester = cell.text;
+          break;
+        case 1:
+          course.id = cell.text;
+          break;
+        case 2:
+          course.name = cell.text;
+          break;
+        case 3:
+          course.type = cell.text;
+          break;
+        case 4:
+          course.period = cell.text;
+          break;
+        case 5:
+          course.credit = cell.text;
+          break;
+        case 6:
+          course.category = cell.text;
+          break;
+        case 7:
+          course.grade = cell.text;
+          break;
+        case 8:
+          course.isDegree = cell.text;
+      }
+    }
+    return course;
   };
 
 }).call(this);
