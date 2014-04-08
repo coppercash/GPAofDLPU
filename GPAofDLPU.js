@@ -18,75 +18,83 @@
  */
 
 (function() {
-  var Course, getReportTable, isRowACourse, rowToCourse, runOnLoad, tableToCourses;
-
-  Course = (function() {
-    function Course() {}
-
-    return Course;
-
-  })();
+  var Course, getReportTable, runOnLoad;
 
   runOnLoad = function() {
-    return window.alert('GPAofDLPU is loaded and installed well.');
+    var courses, json, row, tableElement, _i, _len;
+    window.alert('GPAofDLPU is loaded and installed well.');
+    tableElement = getReportTable();
+    for (_i = 0, _len = tableElement.length; _i < _len; _i++) {
+      row = tableElement[_i];
+      if (Course.isRowACourse(row)) {
+        courses = new Course(row);
+      }
+    }
+    json = JSON.stringify(courses);
+    return console.log(json);
   };
 
   getReportTable = function() {
     return document.getElementsByClassName('tableborder');
   };
 
-  tableToCourses = function(table) {
-    var row, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = table.length; _i < _len; _i++) {
-      row = table[_i];
-      if (isRowACourse(row)) {
-        _results.push(rowToCourse(row));
+  Course = (function() {
+    function Course(row) {
+      var cell, index, _i, _ref;
+      for (index = _i = 0, _ref = row.length; 0 <= _ref ? _i < _ref : _i > _ref; index = 0 <= _ref ? ++_i : --_i) {
+        cell = row[index];
+        switch (index) {
+          case 0:
+            this.semester = cell.text;
+            break;
+          case 1:
+            this.id = cell.text;
+            break;
+          case 2:
+            this.name = cell.text;
+            break;
+          case 3:
+            this.type = cell.text;
+            break;
+          case 4:
+            this.period = cell.text;
+            break;
+          case 5:
+            this.credit = cell.text;
+            break;
+          case 6:
+            this.category = cell.text;
+            break;
+          case 7:
+            this.grade = cell.text;
+            break;
+          case 8:
+            this.isDegree = cell.text;
+        }
       }
     }
-    return _results;
-  };
 
-  isRowACourse = function(row) {
-    return true;
-  };
+    Course.isRowACourse = function(row) {
+      return true;
+    };
 
-  rowToCourse = function(row) {
-    var cell, course, index, _i, _ref;
-    course = new Course;
-    for (index = _i = 0, _ref = row.length; 0 <= _ref ? _i < _ref : _i > _ref; index = 0 <= _ref ? ++_i : --_i) {
-      cell = row[index];
-      switch (index) {
-        case 0:
-          course.semester = cell.text;
-          break;
-        case 1:
-          course.id = cell.text;
-          break;
-        case 2:
-          course.name = cell.text;
-          break;
-        case 3:
-          course.type = cell.text;
-          break;
-        case 4:
-          course.period = cell.text;
-          break;
-        case 5:
-          course.credit = cell.text;
-          break;
-        case 6:
-          course.category = cell.text;
-          break;
-        case 7:
-          course.grade = cell.text;
-          break;
-        case 8:
-          course.isDegree = cell.text;
-      }
-    }
-    return course;
-  };
+    Course.prototype.toJSON = function() {
+      return {
+        'a': this.semester,
+        'a': this.id,
+        'a': this.name,
+        'a': this.type,
+        'a': this.period,
+        'a': this.credit,
+        'a': this.category,
+        'a': this.grade,
+        'a': this.isDegree
+      };
+    };
+
+    return Course;
+
+  })();
 
 }).call(this);
 
