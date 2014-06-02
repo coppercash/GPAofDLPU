@@ -11,90 +11,140 @@
     var script = document.createElement("script")
     script.type = "text/javascript";
     script.src = 'https://raw.github.com/coppercash/GPAofDLPU/master/GPAofDLPU.js';
-    script.onload = function(){ runOnLoad(); };
     document.getElementsByTagName("head")[0].appendChild(script);
     window.alert('GPAofDLPU is being loading. It costs less than 1 min.')
   })();
  */
 
+
+/*
+  {"version":"95ed3d84-6d7d-4e49-b9db-db27d16ec322",
+  "courses":[
+  {
+  "selected":true,
+  "name":"健康教育",
+  "credit":1,
+  "grade":"99",
+  "groups":"非学位课"
+  }]}
+ */
+
 (function() {
-  var Course, getReportTable, runOnLoad;
+  var Course, ReportCard, runOnLoad;
 
   runOnLoad = function() {
-    var courses, json, row, tableElement, _i, _len;
+    var courses, json, row, rows, table, _i, _j, _len, _len1, _ref, _ref1;
     window.alert('GPAofDLPU is loaded and installed well.');
-    tableElement = getReportTable();
-    for (_i = 0, _len = tableElement.length; _i < _len; _i++) {
-      row = tableElement[_i];
-      if (Course.isRowACourse(row)) {
-        courses = new Course(row);
+    rows = new Array();
+    _ref = ReportCard.getReportCards(document);
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      table = _ref[_i];
+      _ref1 = table.children[0].children;
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        row = _ref1[_j];
+        rows.push(row);
       }
     }
+    courses = (function() {
+      var _k, _len2, _results;
+      _results = [];
+      for (_k = 0, _len2 = rows.length; _k < _len2; _k++) {
+        row = rows[_k];
+        if (Course.isRowACourse(row)) {
+          _results.push(new Course(row));
+        }
+      }
+      return _results;
+    })();
     json = JSON.stringify(courses);
     return console.log(json);
   };
 
-  getReportTable = function() {
-    return document.getElementsByClassName('tableborder');
-  };
-
   Course = (function() {
     function Course(row) {
-      var cell, index, _i, _ref;
-      for (index = _i = 0, _ref = row.length; 0 <= _ref ? _i < _ref : _i > _ref; index = 0 <= _ref ? ++_i : --_i) {
-        cell = row[index];
+      var cell, cells, index, _i, _ref;
+      cells = row.children;
+      for (index = _i = 0, _ref = cells.length; 0 <= _ref ? _i < _ref : _i > _ref; index = 0 <= _ref ? ++_i : --_i) {
+        cell = cells[index];
         switch (index) {
           case 0:
-            this.semester = cell.text;
+            this.semester = cell.textContent.trim();
             break;
           case 1:
-            this.id = cell.text;
+            this.id = cell.textContent.trim();
             break;
           case 2:
-            this.name = cell.text;
+            this.name = cell.textContent.trim();
             break;
           case 3:
-            this.type = cell.text;
+            this.type = cell.textContent.trim();
             break;
           case 4:
-            this.period = cell.text;
+            this.period = cell.textContent.trim();
             break;
           case 5:
-            this.credit = cell.text;
+            this.credit = cell.textContent.trim();
             break;
           case 6:
-            this.category = cell.text;
+            this.category = cell.textContent.trim();
             break;
           case 7:
-            this.grade = cell.text;
+            this.grade = cell.textContent.trim();
             break;
           case 8:
-            this.isDegree = cell.text;
+            this.isDegree = cell.textContent.trim() === '是';
         }
       }
     }
 
     Course.isRowACourse = function(row) {
-      return true;
+      var idCell, text;
+      idCell = row.children[1];
+      text = idCell.textContent.trim();
+      return text >>> 0 === parseFloat(text);
     };
 
     Course.prototype.toJSON = function() {
       return {
-        'a': this.semester,
-        'a': this.id,
-        'a': this.name,
-        'a': this.type,
-        'a': this.period,
-        'a': this.credit,
-        'a': this.category,
-        'a': this.grade,
-        'a': this.isDegree
+        'selected': true,
+        'name': this.name,
+        'credit': this.credit,
+        'grade': this.grade,
+        'groups': (this.isDegree ? '学' : '非')
       };
     };
 
     return Course;
 
   })();
+
+  ReportCard = (function() {
+    function ReportCard() {}
+
+    ReportCard.getReportCards = function(document) {
+      var allTables, table, _i, _len, _results;
+      allTables = document.getElementsByTagName('table');
+      _results = [];
+      for (_i = 0, _len = allTables.length; _i < _len; _i++) {
+        table = allTables[_i];
+        if (this.isTableAReportCard(table)) {
+          _results.push(table);
+        }
+      }
+      return _results;
+    };
+
+    ReportCard.isTableAReportCard = function(table) {
+      var bordercolor;
+      bordercolor = table.attributes['bordercolor'];
+      return bordercolor && bordercolor.value === '#000000';
+    };
+
+    return ReportCard;
+
+  })();
+
+  runOnLoad();
 
 }).call(this);
 
