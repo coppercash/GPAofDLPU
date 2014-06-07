@@ -10,6 +10,8 @@
   (function loadScript(){
     var script = document.createElement("script")
     script.type = "text/javascript";
+    script.language = 'javascript'
+    script.charset = 'UTF-8';
     script.src = 'https://raw.github.com/coppercash/GPAofDLPU/master/GPAofDLPU.js';
     document.getElementsByTagName("head")[0].appendChild(script);
     window.alert('GPAofDLPU is being loading. It costs less than 1 min.')
