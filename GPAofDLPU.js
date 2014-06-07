@@ -56,44 +56,45 @@
       }
       return _results;
     })();
-    json = JSON.stringify(courses);
+    json = JSON.stringify({
+      'version': '95ed3d84-6d7d-4e49-b9db-db27d16ec322',
+      'courses': courses
+    });
     return console.log(json);
   };
 
   Course = (function() {
     function Course(row) {
-      var cell, cells, index, _i, _ref;
+      var attrMap, cells, converter, index, text, _i, _ref;
       cells = row.children;
       for (index = _i = 0, _ref = cells.length; 0 <= _ref ? _i < _ref : _i > _ref; index = 0 <= _ref ? ++_i : --_i) {
-        cell = cells[index];
-        switch (index) {
-          case 0:
-            this.semester = cell.textContent.trim();
-            break;
-          case 1:
-            this.id = cell.textContent.trim();
-            break;
-          case 2:
-            this.name = cell.textContent.trim();
-            break;
-          case 3:
-            this.type = cell.textContent.trim();
-            break;
-          case 4:
-            this.period = cell.textContent.trim();
-            break;
-          case 5:
-            this.credit = cell.textContent.trim();
-            break;
-          case 6:
-            this.category = cell.textContent.trim();
-            break;
-          case 7:
-            this.grade = cell.textContent.trim();
-            break;
-          case 8:
-            this.isDegree = cell.textContent.trim() === '是';
-        }
+        text = cells[index].textContent.trim();
+        attrMap = [
+          {
+            'attr': 'semester'
+          }, {
+            'attr': 'id'
+          }, {
+            'attr': 'name'
+          }, {
+            'attr': 'type'
+          }, {
+            'attr': 'period'
+          }, {
+            'attr': 'credit',
+            'cvt': Course.convertCredit
+          }, {
+            'attr': 'category'
+          }, {
+            'attr': 'grade',
+            'cvt': Course.convertGrade
+          }, {
+            'attr': 'isDegree',
+            'cvt': Course.convertIsDegree
+          }
+        ][index];
+        converter = attrMap['cvt'];
+        this[attrMap['attr']] = typeof converter === 'function' ? converter(text) : text;
       }
     }
 
@@ -112,6 +113,30 @@
         'grade': this.grade,
         'groups': (this.isDegree ? '学' : '非')
       };
+    };
+
+    Course.convertCredit = function(text) {
+      return parseInt(text);
+    };
+
+    Course.convertIsDegree = function(text) {
+      return text === '是';
+    };
+
+    Course.convertGrade = function(text) {
+      var grade;
+      grade = {
+        '优': 95,
+        '良': 85,
+        '中': 75,
+        '及格': 65,
+        '合格': 65
+      }[text];
+      if (grade !== void 0) {
+        return grade;
+      } else {
+        return parseInt(text);
+      }
     };
 
     return Course;
@@ -135,9 +160,9 @@
     };
 
     ReportCard.isTableAReportCard = function(table) {
-      var bordercolor;
-      bordercolor = table.attributes['bordercolor'];
-      return bordercolor && bordercolor.value === '#000000';
+      var borderColor;
+      borderColor = table.attributes['bordercolor'];
+      return borderColor && borderColor.value === '#000000';
     };
 
     return ReportCard;

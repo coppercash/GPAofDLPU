@@ -35,7 +35,7 @@ runOnLoad = ->
       rows.push row
 
   courses = ((new Course(row)) for row in rows when Course.isRowACourse(row))
-  json = JSON.stringify courses
+  json = JSON.stringify {'version': '95ed3d84-6d7d-4e49-b9db-db27d16ec322', 'courses': courses}
   console.log json
 
 
@@ -44,18 +44,23 @@ class Course
   constructor: (row) ->
     cells = row.children
     for index in [0...cells.length]
-      cell = cells[index]
-      switch index
-        when 0 then this.semester = cell.textContent.trim()
-        when 1 then this.id = cell.textContent.trim()
-        when 2 then this.name = cell.textContent.trim()
-        when 3 then this.type = cell.textContent.trim()
-        when 4 then this.period = cell.textContent.trim()
-        when 5 then this.credit = cell.textContent.trim()
-        when 6 then this.category = cell.textContent.trim()
-        when 7 then this.grade = cell.textContent.trim()
-        when 8 then this.isDegree = (cell.textContent.trim() is '是')
+      text = cells[index].textContent.trim()
 
+      attrMap =
+      [
+        {'attr': 'semester',}
+        {'attr': 'id',}
+        {'attr': 'name',}
+        {'attr': 'type',}
+        {'attr': 'period',}
+        {'attr': 'credit', 'cvt': Course.convertCredit}
+        {'attr': 'category',}
+        {'attr': 'grade', 'cvt': Course.convertGrade}
+        {'attr': 'isDegree', 'cvt': Course.convertIsDegree}
+      ][index]
+
+      converter = attrMap['cvt']
+      this[attrMap['attr']] = if typeof converter is 'function' then converter(text) else text
 
   @isRowACourse: (row) ->
     idCell = row.children[1]
@@ -71,6 +76,15 @@ class Course
     'groups': (if this.isDegree then '学' else '非'),
     }
 
+  @convertCredit: (text) ->
+    parseInt(text)
+
+  @convertIsDegree: (text) ->
+    text is '是'
+
+  @convertGrade: (text) ->
+    grade = {'优': 95, '良': 85, '中': 75, '及格': 65, '合格': 65,}[text]
+    if grade isnt undefined then grade else parseInt(text)
 
 
 class ReportCard
@@ -80,8 +94,8 @@ class ReportCard
     table for table in allTables when this.isTableAReportCard(table)
 
   @isTableAReportCard: (table) ->
-    bordercolor = table.attributes['bordercolor']
-    bordercolor and bordercolor.value is '#000000'
+    borderColor = table.attributes['bordercolor']
+    borderColor and borderColor.value is '#000000'
 
 
 runOnLoad()
