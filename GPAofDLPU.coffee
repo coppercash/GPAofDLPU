@@ -5,13 +5,14 @@
 ###
 # Copy and paste the script in comment into your console of browser.
   (function loadScript(){
-    var script = document.createElement("script")
+    var script = document.createElement("script");
     script.type = "text/javascript";
-    script.language = 'javascript'
+    script.language = 'javascript';
     script.charset = 'UTF-8';
     script.src = 'https://raw.github.com/coppercash/GPAofDLPU/master/GPAofDLPU.js';
+    script.onload = (function(){runGPA();});
     document.getElementsByTagName("head")[0].appendChild(script);
-    window.alert('GPAofDLPU is being loading. It costs less than 1 min.')
+    window.alert('GPAofDLPU is being loading. It costs less than 1 min.');
   })();
 ###
 
@@ -100,4 +101,4 @@ class ReportCard
     borderColor and borderColor.value is '#000000'
 
 
-runOnLoad()
+window.runGPA = runOnLoad
