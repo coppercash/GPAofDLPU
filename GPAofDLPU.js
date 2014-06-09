@@ -68,7 +68,7 @@
 
   Course = (function() {
     function Course(row) {
-      var attrMap, cells, converter, index, text, _i, _ref;
+      var attrKey, attrMap, cells, converter, index, text, _i, _ref;
       cells = row.children;
       for (index = _i = 0, _ref = cells.length; 0 <= _ref ? _i < _ref : _i > _ref; index = 0 <= _ref ? ++_i : --_i) {
         text = cells[index].textContent.trim();
@@ -96,8 +96,9 @@
             'cvt': Course.convertIsDegree
           }
         ][index];
+        attrKey = attrMap['attr'];
         converter = attrMap['cvt'];
-        this[attrMap['attr']] = typeof converter === 'function' ? converter(text) : text;
+        this[attrKey] = converter != null ? converter(text) : text;
       }
     }
 
@@ -135,7 +136,7 @@
         '及格': 65,
         '合格': 65
       }[text];
-      if (grade !== void 0) {
+      if (grade != null) {
         return grade;
       } else {
         return parseInt(text);

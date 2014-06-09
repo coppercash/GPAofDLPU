@@ -62,8 +62,9 @@ class Course
         {'attr': 'isDegree', 'cvt': Course.convertIsDegree}
       ][index]
 
+      attrKey = attrMap['attr']
       converter = attrMap['cvt']
-      this[attrMap['attr']] = if typeof converter is 'function' then converter(text) else text
+      this[attrKey] = if converter? then converter(text) else text
 
   @isRowACourse: (row) ->
     idCell = row.children[1]
@@ -87,7 +88,7 @@ class Course
 
   @convertGrade: (text) ->
     grade = {'优': 95, '良': 85, '中': 75, '及格': 65, '合格': 65,}[text]
-    if grade isnt undefined then grade else parseInt(text)
+    if grade? then grade else parseInt(text)
 
 
 class ReportCard
